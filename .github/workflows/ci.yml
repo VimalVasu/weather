@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js (pnpm)
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint
+        run: pnpm exec eslint . --ext .js,.jsx,.ts,.tsx
+
+      - name: Run TypeScript type-check
+        run: pnpm exec tsc --noEmit
+
+      # Optional: run unit tests if you add them later
+      #- name: Run unit tests
+      #  run: pnpm exec vitest run
